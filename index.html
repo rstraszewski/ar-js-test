@@ -14,15 +14,15 @@
 
     el.addEventListener("gps-camera-update-position", async(e) => {
         if(!downloaded) {
-            const west = e.detail.position.longitude - 0.03,
-                  east = e.detail.position.longitude + 0.03,
-                  south = e.detail.position.latitude - 0.03;
-                  north = e.detail.position.latitude + 0.03;
+            const west = e.detail.position.longitude - 0.01,
+                  east = e.detail.position.longitude + 0.01,
+                  south = e.detail.position.latitude - 0.01;
+                  north = e.detail.position.latitude + 0.01;
             console.log(`${west} ${south} ${east} ${north}`);
             const response = await fetch(`https://hikar.org/webapp/map?bbox=${west},${south},${east},${north}&layers=poi&outProj=4326`);
             const pois = await response.json();
             pois.features.forEach ( feature => {
-                if(feature.geometry.type === 'Point' && feature.properties.name)
+                if(feature.geometry.type === 'Point' && feature.properties.name && feature.properties.amenity === 'restaurant')
                 {
                  
                
@@ -65,9 +65,8 @@
     </script>
 </head>
 <body>
-<a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true'>
-    <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
-    <a-entity material='color: red' geometry='primitive: box' gps-new-entity-place="latitude: 51.1208938; longitude: 17.0228639" scale="10 10 10"></a-entity>
+<a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true' >
+    <a-camera gps-new-camera='gpsMinDistance: 5' arjs-device-orientation-controls='smoothingFactor: 0.1'></a-camera>
 </a-scene>
 </body>
 </html>
